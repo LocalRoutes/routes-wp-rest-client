@@ -236,7 +236,6 @@ export class WpApiClient {
 			}
 		this.baseUrl = new URL(options.restBase ?? 'wp-json', baseUrl)
 		this.headers = options.headers || {...this.authHeader}
-		console.log('options.headers: ', options);
 		
 		this.http = new FetchClient(
 			this.baseUrl,

@@ -1,6 +1,6 @@
 import express, { Request, Response, NextFunction } from 'express';
 import { WpApiClient } from './wp-api-client';
-import { WPPost, WPPage, WPComment } from './types';
+import { WPPost, WPPage, WPComment, WPCategory } from './types';
 
 interface ApiError extends Error {
   status?: number;
@@ -28,6 +28,25 @@ const errorHandler = (err: ApiError, req: Request, res: Response, next: NextFunc
 };
 
 // Routes
+
+// Categories endpoints
+app.get('/api/categories', async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const categories = await wpClient.postCategory<WPCategory>().find();
+    res.json(categories);
+  } catch (error) {
+    next(error);
+  }
+});
+
+app.get('/api/categories/:id', async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const category = await wpClient.postCategory<WPCategory>().find(Number(req.params.id));
+    res.json(category);
+  } catch (error) {
+    next(error);
+  }
+});
 
 // Posts endpoints
 app.get('/api/posts', async (req: Request, res: Response, next: NextFunction) => {
