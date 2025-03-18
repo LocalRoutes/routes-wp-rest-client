@@ -47,6 +47,15 @@ import {
 	WPTag,
 	WPTheme,
 	WPUser,
+	GDPost,
+	GDCategory,
+	GDSearchParams,
+	GDSearchResult,
+	IMacGeneral,
+	IMacGeneralData,
+	IArchiveItems,
+	IMacGeneralDetails,
+	IGeneral
 } from './types'
 import {
 	getDefaultQueryList,
@@ -62,6 +71,145 @@ export class WpApiClient {
 	protected readonly headers?: Record<string, string>
 	protected readonly http: FetchClient
 	protected readonly baseUrl: URL
+	// protected readonly geocodingApiKey?: string
+
+	// async getGDPosts(postType: string, options: {
+	// 	categoryValue?: string | number;
+	// 	orderby?: string;
+	// 	page?: number;
+	// 	perPage?: number;
+	// } = {}): Promise<GDSearchResult> {
+	// 	const {
+	// 		categoryValue = '',
+	// 		orderby = 'post_date_desc',
+	// 		page = 1,
+	// 		perPage = 10
+	// 	} = options;
+
+	// 	const categoryField = `gd_${postType}category`;
+	// 	const url = new URL(`${this.baseUrl}/geodir/v2/${postType}`);
+	// 	url.searchParams.append(categoryField, categoryValue.toString());
+	// 	url.searchParams.append('orderby', orderby);
+	// 	url.searchParams.append('page', page.toString());
+	// 	url.searchParams.append('per_page', perPage.toString());
+
+	// 	const response = await this.http.get<GDPost[]>(`${url.toString()}`);
+	// 	const totalPages = parseInt(response.headers?.get('X-WP-TotalPages') || '1', 10);
+	// 	const total = parseInt(response.headers?.get('X-WP-Total') || '0', 10);
+
+	// 	return {
+	// 		posts: response.data || [],
+	// 		total,
+	// 		totalPages,
+	// 		currentPage: page
+	// 	};
+	// }
+
+	// async getGDCategories(postType: string, page: number = 1, perPage: number = 10): Promise<GDCategory[]> {
+	// 	const url = new URL(`${this.baseUrl}/geodir/v2/${postType}/categories`);
+	// 	url.searchParams.append('page', page.toString());
+	// 	url.searchParams.append('per_page', perPage.toString());
+	// 	return this.http.get<GDCategory[]>(url.toString());
+	// }
+
+	// async searchGDPosts(params: GDSearchParams): Promise<GDSearchResult> {
+	// 	const {
+	// 		postType,
+	// 		categoryValue = '',
+	// 		orderby = 'post_date_desc',
+	// 		search = '',
+	// 		page = 1,
+	// 		perPage = 10
+	// 	} = params;
+
+	// 	if (!postType) {
+	// 		throw new Error('Post type is required for GD search');
+	// 	}
+
+	// 	const categoryField = `gd_${postType}category`;
+	// 	const url = new URL(`${this.baseUrl}/geodir/v2/${postType}`);
+	// 	url.searchParams.append(categoryField, categoryValue?.toString() || '');
+	// 	url.searchParams.append('orderby', orderby);
+	// 	url.searchParams.append('search', search);
+	// 	url.searchParams.append('page', page.toString());
+	// 	url.searchParams.append('per_page', perPage.toString());
+
+	// 	const response = await this.http.get<GDPost[]>(url.toString());
+	// 	const totalPages = parseInt(response.headers?.get('X-WP-TotalPages') || '1', 10);
+	// 	const total = parseInt(response.headers?.get('X-WP-Total') || '0', 10);
+
+	// 	return {
+	// 		posts: response.data || [],
+	// 		total,
+	// 		totalPages,
+	// 		currentPage: page
+	// 	};
+	// }
+
+	// async getMacGeneral(): Promise<IMacGeneral> {
+	// 	const response = await this.http.get(`${this.baseUrl}/mac/general`);
+	// 	return response as Promise<IMacGeneral>;
+	// }
+
+	// async getLicenseStatus(): Promise<{ license: boolean }> {
+	// 	const response = await this.http.get(`${this.baseUrl}/mac/license`);
+	// 	return response as Promise<{ license: boolean }>;
+	// }
+
+	// async forgotPassword(email: string): Promise<{ message: string; success: boolean }> {
+	// 	const response = await this.http.post(
+	// 		`${this.baseUrl}/mac/forgot_password`,
+	// 		{ 'Content-Type': 'application/json' },
+	// 		JSON.stringify({ email })
+	// 	);
+	// 	return response as Promise<{ message: string; success: boolean }>;
+	// }
+
+	// async resetPassword(email: string, password: string, otp: string): Promise<{ message: string; success: boolean }> {
+	// 	const response = await this.http.post(
+	// 		`${this.baseUrl}/mac/reset_password`,
+	// 		{ 'Content-Type': 'application/json' },
+	// 		JSON.stringify({ email, password, otp })
+	// 	);
+	// 	return response as Promise<{ message: string; success: boolean }>;
+	// }
+
+	// async userRegister({ email, password, otp, retry }: { email: string; password: string; otp?: string; retry?: boolean }): Promise<{ message: string; status: 'Pending' | 'Active'; success: boolean }> {
+	// 	const response = await this.http.post(
+	// 		`${this.baseUrl}/mac/user_register`,
+	// 		{ 'Content-Type': 'application/json' },
+	// 		JSON.stringify({ email, password, otp, retry })
+	// 	);
+	// 	return response as Promise<{ message: string; status: 'Pending' | 'Active'; success: boolean }>;
+	// }
+
+	// async getTermsLink(): Promise<{ title: string; link: string }> {
+	// 	const response = await this.http.get(`${this.baseUrl}/mac/get_terms_link`);
+	// 	return response as Promise<{ title: string; link: string }>;
+	// }
+
+	// async getProfilePicture(userId: string): Promise<{ avatar_link: string }> {
+	// 	const response = await this.http.get(`${this.baseUrl}/mac/get_profile_picture?user_id=${userId}`);
+	// 	return response as Promise<{ avatar_link: string }>;
+	// }
+
+	// async updateProfilePicture({ userId, file }: { userId: string; file: File }): Promise<{ avatar_link: string }> {
+	// 	const formData = new FormData();
+	// 	formData.append('user_id', userId);
+	// 	formData.append('file', file);
+
+	// 	const response = await this.http.post(
+	// 		`${this.baseUrl}/mac/update_profile_picture`,
+	// 		{},
+	// 		formData
+	// 	);
+	// 	return response as Promise<{ avatar_link: string }>;
+	// }
+
+	// async deactivateUser(userId: string): Promise<{ message: string }> {
+	// 	const response = await this.http.get(`${this.baseUrl}/mac/deactivate_user?user_id=${userId}`);
+	// 	return response as Promise<{ message: string }>;
+	// }
 
 	constructor(
 		baseUrl: string,
@@ -87,7 +235,9 @@ export class WpApiClient {
 				'X-WP-Nonce': options.auth.nonce,
 			}
 		this.baseUrl = new URL(options.restBase ?? 'wp-json', baseUrl)
-		this.headers = options.headers
+		this.headers = options.headers || {...this.authHeader}
+		console.log('options.headers: ', options);
+		
 		this.http = new FetchClient(
 			this.baseUrl,
 			options.onError,

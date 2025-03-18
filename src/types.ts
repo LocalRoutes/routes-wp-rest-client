@@ -180,6 +180,89 @@ export interface WPThemeSupports {
 	'wp-block-styles': boolean
 }
 
+export interface GDPost extends WPPost {
+  postType: string;
+  gdCategories?: number[];
+  gdTags?: number[];
+  gdCustomFields?: Record<string, any>;
+}
+
+export interface GDCategory extends WPCategory {
+  postType: string;
+  termId: number;
+  taxonomy: string;
+}
+
+export interface GDSearchParams {
+  postType: string;
+  categoryValue?: string | number;
+  orderby?: string;
+  search?: string;
+  page?: number;
+  perPage?: number;
+}
+
+export interface GDSearchResult {
+  posts: GDPost[];
+  total: number;
+  totalPages: number;
+  currentPage: number;
+}
+
+export interface IMacGeneral {
+  'gd_event'?: IMacGeneralData;
+  'gd_offer'?: IMacGeneralData;
+  'gd_place'?: IMacGeneralData;
+  'gd_tourpoint'?: IMacGeneralData;
+  'gd_rvjobs'?: IMacGeneralData;
+  'gd_rvsforsale'?: IMacGeneralData;
+  'gd_request_sample'?: IMacGeneralData;
+  'general': IGeneral;
+}
+
+export interface IMacGeneralData {
+  'archive-item': IArchiveItems;
+  'detail-info': string[];
+  'details': IMacGeneralDetails;
+  'icon': string;
+  'more-info': string[];
+  'plural-name': string;
+  'singular-name': string;
+  'slug': string;
+}
+
+export interface IArchiveItems {
+  'bottom'?: string | boolean;
+  'bottom-location-setting'?: string | boolean;
+  'middle-location-setting'?: string | boolean;
+  'subtitle-location-setting'?: string | boolean;
+  'top-location-setting'?: string | boolean;
+  'display_view'?: string | boolean;
+  'middle'?: string | boolean;
+  'post_images'?: string | boolean;
+  'subtitle'?: string | boolean;
+  'title'?: boolean;
+}
+
+export interface IMacGeneralDetails {
+  'author-display-name'?: string | boolean;
+  'author-image'?: string | boolean;
+  'date-for-listing'?: string | boolean;
+  'event-date'?: string | boolean;
+  'slogan'?: string | boolean;
+}
+
+export interface IGeneral {
+  'default_location'?: string;
+  'default_region'?: string;
+  'default_city'?: string;
+  'default_country'?: string;
+  'search_radius'?: string;
+  'search_distance_long'?: string;
+  'search_distance_short'?: string;
+  'search_distance_unit'?: string;
+}
+
 export interface WPTheme {
 	stylesheet: string
 	template: string
