@@ -459,3 +459,27 @@ export interface YoastTargetClass {
 export interface YoastTwitterMisc {
 	'Written by': string
 }
+
+export interface AuthPayload {
+	url: string
+	username: string
+	password: string
+}
+
+export interface AuthResponse {
+	success: boolean
+	statusCode: number
+	code: string
+	message: string
+	data: AuthData
+}
+
+export interface AuthData {
+	token: string
+	id: number
+	email: string
+	nicename: string
+	firstName: string
+	lastName: string
+	displayName: string
+}
