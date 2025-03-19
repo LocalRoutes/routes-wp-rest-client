@@ -19,10 +19,8 @@
     "docker": "docker compose -f __tests__/e2e/docker-compose.yml up -d",
     "docker:build": "docker compose -f __tests__/e2e/docker-compose.yml build --no-cache --pull",
     "docker:down": "docker compose -f __tests__/e2e/docker-compose.yml down --volumes",
-    "postinstall": "husky install",
     "prepack": "yarn pinst --disable",
-    "postpack": "yarn pinst --enable",
-    "prepare": "husky install"
+    "postpack": "yarn pinst --enable"
   },
   "types": "./dist/index.d.ts",
   "contributors": [

@@ -134,7 +134,7 @@ app.post('/api/authenticate', async (req: Request<{}, {}, AuthPayload>, res: Res
     });
 
     if (!response.ok) {
-      const errorData = await response.json().catch(() => null);
+      // const errorData = await response.json().catch(() => null);
       let errorMessage = 'Authentication failed';
       
       switch (response.status) {
