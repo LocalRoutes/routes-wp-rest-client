@@ -808,36 +808,27 @@ export class WpApiClient {
 		};
 	}
 
-	public gdPosts<P = GDPost>(postType: string, params: {
-		categoryValue?: string,
-		orderby?: string,
-		search?: string,
-		latitude?: string,
-		longitude?: string,
-		page?: number
-	} = {}): Promise<P[]> {
-		try {
-			if (!postType?.trim()) {
-				throw new Error('Post type is required for GD posts');
-			}
-
-			const query = new URLSearchParams({
-				orderby: params.orderby || 'post_date_desc',
-				page: String(params.page || 1)
-			});
-
-			if (params.categoryValue) {
-				query.set(`gd_${postType}category`, params.categoryValue);
-			}
-			if (params.search) query.set('search', params.search);
-			if (params.latitude) query.set('latitude', params.latitude);
-			if (params.longitude) query.set('longitude', params.longitude);
-
-			const endpoint = `geodir/v2/${postType}?${query.toString()}`;
-			return this.createEndpointCustomGet<P[], P[]>(endpoint)();
-		} catch (error) {
-			throw new Error(`Failed to process GD posts request: ${error instanceof Error ? error.message : 'Unknown error'}`);
+	public gdPosts<P = GDPost>(postType: string): DefaultEndpoint<P> & { customUpdate: (id: number, body: Partial<P>) => Promise<P>; customDelete: (id: number, force?: boolean) => Promise<P> } {
+		if (!postType?.trim()) {
+			throw new Error('Post type is required for GD posts');
 		}
+		const endpoint = `geodir/v2/${postType}`;
+		const defaultParams = new URLSearchParams({ force: 'false' });
+		const defaultEndpoints = this.defaultEndpoints<P>(endpoint, defaultParams);
+
+		return {
+			...defaultEndpoints,
+			customUpdate: async (id: number, body: Partial<P>): Promise<P> => {
+                return this.createEndpointCustomPost<P, P>(`${endpoint}/${id}`)(body as P);
+			},
+			customDelete: async (id: number, force = false) => {
+				const params = new URLSearchParams();
+				if (force) params.set('force', 'true');
+				return this.http.delete<P>(
+					`${endpoint}/${id}${params.toString() ? '?' + params.toString() : ''}`
+				);
+			},
+		};
 	}
 
 

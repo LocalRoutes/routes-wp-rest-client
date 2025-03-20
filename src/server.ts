@@ -259,17 +259,95 @@ app.get('/api/gd-categories/:postType', async (req: Request, res: Response, next
 app.get('/api/gd-posts/:postType', async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { postType } = req.params;
-    const { category, search, latitude, longitude, page, orderby } = req.query;
+    const query = new URLSearchParams();
 
-    const posts = await handleApiRequest(() => wpClient.gdPosts(postType, {
-      categoryValue: category as string,
-      search: search as string,
-      latitude: latitude as string,
-      longitude: longitude as string,
-      page: page ? Number(page) : undefined,
-      orderby: orderby as string
-    }));
+    // Add all available query parameters
+    const {
+      category, tags, status, author, author_exclude,
+      after, before, include, exclude, offset,
+      category_exclude, tags_exclude, order, orderby,
+      parent, parent_exclude, slug, page, per_page,
+      search, latitude, longitude
+    } = req.query;
+
+    if (category) query.set(`gd_${postType}category`, category as string);
+    if (tags) query.set(`gd_${postType}_tags`, tags as string);
+    if (status) query.set('status', status as string);
+    if (author) query.set('author', author as string);
+    if (author_exclude) query.set('author_exclude', author_exclude as string);
+    if (after) query.set('after', after as string);
+    if (before) query.set('before', before as string);
+    if (include) query.set('include', include as string);
+    if (exclude) query.set('exclude', exclude as string);
+    if (offset) query.set('offset', offset as string);
+    if (category_exclude) query.set(`gd_${postType}category_exclude`, category_exclude as string);
+    if (tags_exclude) query.set(`gd_${postType}_tags_exclude`, tags_exclude as string);
+    if (order) query.set('order', order as string);
+    if (orderby) query.set('orderby', orderby as string);
+    if (parent) query.set('parent', parent as string);
+    if (parent_exclude) query.set('parent_exclude', parent_exclude as string);
+    if (slug) query.set('slug', slug as string);
+    if (page) query.set('page', page as string);
+    if (per_page) query.set('per_page', per_page as string);
+    if (search) query.set('search', search as string);
+    if (latitude) query.set('latitude', latitude as string);
+    if (longitude) query.set('longitude', longitude as string);
+
+    const posts = await handleApiRequest(() => wpClient.gdPosts(postType).find(query));
     res.json(posts);
+  } catch (error) {
+    next(error);
+  }
+});
+
+app.get('/api/gd-posts/:postType/:id', async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { postType, id } = req.params;
+    const [post] = await handleApiRequest(() => wpClient.gdPosts(postType).find(Number(id)));
+    if (!post) {
+      res.status(404).json({ error: 'Post not found' });
+      return;
+    }
+    res.json(post);
+  } catch (error) {
+    next(error);
+  }
+});
+
+app.post('/api/gd-posts/:postType', async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { postType } = req.params;
+    const newPost = await handleApiRequest(() => wpClient.gdPosts(postType).create(req.body));
+    res.status(201).json(newPost);
+  } catch (error) {
+    next(error);
+  }
+});
+
+app.put('/api/gd-posts/:postType/:id', async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { postType, id } = req.params;
+    const updatedPost = await handleApiRequest(() => wpClient.gdPosts(postType).customUpdate(Number(id),req.body));
+    if (!updatedPost) {
+      res.status(404).json({ error: 'Post not found' });
+      return;
+    }
+    res.json(updatedPost);
+  } catch (error) {
+    next(error);
+  }
+});
+
+app.delete('/api/gd-posts/:postType/:id', async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { postType, id } = req.params;
+    const force = req.query.force === 'true';
+    const deletedPost = await handleApiRequest(() => wpClient.gdPosts(postType).customDelete(Number(id), force));
+    if (!deletedPost) {
+      res.status(404).json({ error: 'Post not found' });
+      return;
+    }
+    res.json({ message: 'Post deleted successfully', post: deletedPost });
   } catch (error) {
     next(error);
   }

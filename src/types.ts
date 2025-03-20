@@ -218,25 +218,58 @@ export interface GDPost extends WPPost {
   gdCategories?: number[];
   gdTags?: number[];
   gdCustomFields?: Record<string, any>;
-  latitude?: string;
-  longitude?: string;
-  distance?: string;
-  overall_rating?: number;
-  rating_count?: number;
-  post_locations?: {
-    address?: string;
-    city?: string;
-    region?: string;
-    country?: string;
-    zip?: string;
+  package_id?: string;
+  slogan?: string;
+  subheading?: string;
+  street?: string;
+  mapview?: string;
+  mapzoom?: string;
+  logo?: string;
+  phone?: string;
+  whatsapp?: string;
+  facebook?: string;
+  email?: string;
+  website?: string;
+  twitter?: string;
+  instagram?: string;
+  business_hours?: any;
+  timing?: string;
+  price?: any;
+  price_range?: {
+    raw: string;
+    rendered: string;
   };
-  featured?: boolean;
-  default_category?: string;
-  post_status?: string;
-  post_date?: string;
-  post_modified?: string;
-  post_author?: number;
-  comment_count?: number;
+  gd_tourpoint?: string;
+  gd_place?: string;
+  link_wikipedia?: string;
+  special_offers?: string;
+  video?: string;
+  featured_image?: {
+    id: string;
+    title: string;
+    src: string;
+    thumbnail: string;
+    width: number;
+    height: number;
+  };
+  images?: Array<{
+    id: string;
+    title: string;
+    src: string;
+    thumbnail: string;
+    featured: boolean;
+    position: string;
+  }>;
+  linked_posts?: {
+    linked_to: {
+      gd_tourpoint: Array<any>;
+      gd_place: Array<any>;
+    };
+    linked_from: {
+      gd_tourpoint: Array<any>;
+      gd_place: Array<any>;
+    };
+  };
 }
 
 export interface GDCategory {
