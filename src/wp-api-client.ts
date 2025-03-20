@@ -60,7 +60,8 @@ import {
 	CountryResponse,
 	GDField,
 	GDReview,
-	GDSettingsGroup
+	GDSettingsGroup,
+	GDSetting
 } from './types'
 import {
 	getDefaultQueryList,
@@ -832,6 +833,24 @@ export class WpApiClient {
 			find,
 			findOne,
 		};
+	}
+
+	public GDSettings<G = GDSetting>(group: string, id: string): {
+		find: () => Promise<G[] | null>;
+		customUpdate: (id: string, body: Partial<G>) => Promise<G>; 
+	} {
+		try {
+			const endpoint = `geodir/v2/settings/${group}/${id}`;
+			const find = this.createEndpointCustomGet<G[]>(endpoint);
+			return {
+				find,
+				customUpdate: async (id: string, body: Partial<G>): Promise<G> => {
+					return this.createEndpointCustomPost<G, G>(`${endpoint}`)(body as G);
+				},
+			};
+		} catch (error) {
+			throw new Error(`Failed to handle GD setting: ${error instanceof Error ? error.message : 'Unknown error'}`);
+		}
 	}
 
 	public gdPosts<P = GDPost>(postType: string): DefaultEndpoint<P> & { customUpdate: (id: number, body: Partial<P>) => Promise<P>; customDelete: (id: number, force?: boolean) => Promise<P> } {

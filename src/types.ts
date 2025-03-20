@@ -197,6 +197,23 @@ export interface PostTypesResponse {
   };
 }
 
+export interface GDSetting {
+  id: string
+  label: string
+  description: string
+  type: string
+  tip: string
+  value: string
+  _links: {
+    self: Array<{
+      href: string
+    }>
+    collection: Array<{
+      href: string
+    }>
+  }
+}
+
 export interface GDReview {
   id: number
   post: number

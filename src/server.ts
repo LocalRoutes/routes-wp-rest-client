@@ -485,6 +485,26 @@ app.get('/api/gd-settings-groups/:id', async (req: Request, res: Response, next:
   }
 });
 
+app.get('/api/gd-settings/:group/:id', async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { group, id } = req.params;
+    const settings = await handleApiRequest(() => wpClient.GDSettings(group, id).find());
+    res.json(settings);
+  } catch (error) {
+    next(error);
+  }
+});
+
+app.put('/api/gd-settings/:group/:id', async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { group, id } = req.params;
+    const updatedSettings = await handleApiRequest(() => wpClient.GDSettings(group, id).customUpdate(id, req.body));
+    res.json(updatedSettings);
+  } catch (error) {
+    next(error);
+  }
+});
+
 // GD Fields endpoints
 app.get('/api/gd-fields', async (req: Request, res: Response, next: NextFunction) => {
   try {
