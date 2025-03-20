@@ -58,7 +58,8 @@ import {
 	IGeneral,
 	PostTypesResponse,
 	CountryResponse,
-	GDField
+	GDField,
+	GDReview
 } from './types'
 import {
 	getDefaultQueryList,
@@ -805,6 +806,19 @@ export class WpApiClient {
 					throw new Error(`Failed to fetch GD fields: ${error instanceof Error ? error.message : 'Unknown error'}`);
 				}
 			}
+		};
+	}
+
+	public gdReviews<P = GDReview>(): DefaultEndpoint<P> & { customUpdate: (id: number, body: Partial<P>) => Promise<P>; } {
+		const endpoint = 'geodir/v2/reviews';
+		const defaultParams = new URLSearchParams({ force: 'false' });
+		const defaultEndpoints = this.defaultEndpoints<P>(endpoint, defaultParams);
+
+		return {
+			...defaultEndpoints,
+			customUpdate: async (id: number, body: Partial<P>): Promise<P> => {
+                return this.createEndpointCustomPost<P, P>(`${endpoint}/${id}`)(body as P);
+			},
 		};
 	}
 

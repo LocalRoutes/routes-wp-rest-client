@@ -197,6 +197,53 @@ export interface PostTypesResponse {
   };
 }
 
+export interface GDReview {
+  id: number
+  post: number
+  parent: number
+  author: number
+  author_name: string
+  author_url: string
+  date: string
+  date_gmt: string
+  content: {
+    rendered: string
+  }
+  link: string
+  status: string
+  type: string
+  post_type: string
+  rating: number
+  country: string
+  region: string
+  city: string
+  latitude: string
+  longitude: string
+  author_avatar_urls: {
+    "24": string
+    "48": string
+    "96": string
+  }
+  meta: Array<any>
+  _links: {
+    self: Array<{
+      href: string
+    }>
+    collection: Array<{
+      href: string
+    }>
+    author: Array<{
+      embeddable: boolean
+      href: string
+    }>
+    up: Array<{
+      embeddable: boolean
+      post_type: string
+      href: string
+    }>
+  }
+}
+
 export interface CountryResponse {
   id: any;
   name: string;

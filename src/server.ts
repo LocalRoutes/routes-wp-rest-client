@@ -353,6 +353,81 @@ app.delete('/api/gd-posts/:postType/:id', async (req: Request, res: Response, ne
   }
 });
 
+// Reviews endpoints
+app.get('/api/gd-reviews', async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const query = new URLSearchParams();
+    const {
+      post_type, author, author_exclude, author_email,
+      after, before, include, exclude, offset,
+      order, orderby, parent, parent_exclude, post,
+      page, per_page, type, password, status
+    } = req.query;
+
+    if (post_type) query.set('post_type', post_type as string);
+    if (author) query.set('author', author as string);
+    if (author_exclude) query.set('author_exclude', author_exclude as string);
+    if (author_email) query.set('author_email', author_email as string);
+    if (after) query.set('after', after as string);
+    if (before) query.set('before', before as string);
+    if (include) query.set('include', include as string);
+    if (exclude) query.set('exclude', exclude as string);
+    if (offset) query.set('offset', offset as string);
+    if (order) query.set('order', order as string);
+    if (orderby) query.set('orderby', orderby as string);
+    if (parent) query.set('parent', parent as string);
+    if (parent_exclude) query.set('parent_exclude', parent_exclude as string);
+    if (post) query.set('post', post as string);
+    if (page) query.set('page', page as string);
+    if (per_page) query.set('per_page', per_page as string);
+    if (type) query.set('type', type as string);
+    if (password) query.set('password', password as string);
+    if (status) query.set('status', status as string);
+
+    const reviews = await handleApiRequest(() => wpClient.gdReviews().find(query));
+    res.json(reviews);
+  } catch (error) {
+    next(error);
+  }
+});
+
+app.get('/api/gd-reviews/:id', async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const [review] = await handleApiRequest(() => wpClient.gdReviews().find(Number(req.params.id)));
+    if (!review) {
+      res.status(404).json({ error: 'Review not found' });
+      return;
+    }
+    res.json(review);
+  } catch (error) {
+    next(error);
+  }
+});
+
+app.post('/api/gd-reviews', async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const newReview = await handleApiRequest(() => wpClient.gdReviews().create(req.body));
+    res.status(201).json(newReview);
+  } catch (error) {
+    next(error);
+  }
+});
+
+app.put('/api/gd-reviews/:id', async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const updatedReview = await handleApiRequest(() => wpClient.gdReviews().customUpdate(Number(req.params.id), req.body));
+    if (!updatedReview) {
+      res.status(404).json({ error: 'Review not found' });
+      return;
+    }
+    res.json(updatedReview);
+  } catch (error) {
+    next(error);
+  }
+});
+
+
+
 // GD Post Types endpoint
 app.get('/api/gd-post-types', async (req: Request, res: Response, next: NextFunction) => {
   try {
