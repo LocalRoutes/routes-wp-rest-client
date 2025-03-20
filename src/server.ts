@@ -309,6 +309,60 @@ app.get('/api/gd-countries/:iso2', async (req: Request, res: Response, next: Nex
   }
 });
 
+// GD Fields endpoints
+app.get('/api/gd-fields', async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const {
+      status,
+      name,
+      post_type,
+      post,
+      package: pkg,
+      default: defaultValue,
+      access,
+      location,
+      order,
+      orderby,
+      page,
+      per_page
+    } = req.query;
+
+    const query = new URLSearchParams();
+    if (status) query.set('status', status.toString());
+    if (name) query.set('name', name.toString());
+    if (post_type) query.set('post_type', post_type.toString());
+    if (post) query.set('post', post.toString());
+    if (pkg) query.set('package', pkg.toString());
+    if (defaultValue) query.set('default', defaultValue.toString());
+    if (access) query.set('access', access.toString());
+    if (location) query.set('location', location.toString());
+    if (order) query.set('order', order.toString());
+    if (orderby) query.set('orderby', orderby.toString());
+    if (page) query.set('page', page.toString());
+    if (per_page) query.set('per_page', per_page.toString());
+
+    const fields = await handleApiRequest(() => wpClient.gdFields().find(query));
+    res.json(fields);
+  } catch (error) {
+    next(error);
+  }
+});
+
+app.get('/api/gd-fields/:id', async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const [field] = await handleApiRequest(() => wpClient.gdFields().find(Number(req.params.id)));
+    if (!field) {
+      res.status(404).json({ error: 'Field not found' });
+      return;
+    }
+    res.json(field);
+  } catch (error) {
+    next(error);
+  }
+});
+
+// Apply error handling middleware
+
 // Apply error handling middleware
 
 app.use(errorHandler);

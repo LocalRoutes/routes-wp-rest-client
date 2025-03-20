@@ -554,3 +554,26 @@ export interface AuthData {
 	lastName: string
 	displayName: string
 }
+
+export interface GDField {
+	id: string
+	type: string
+	name: string
+	title: string
+	admin_title: string
+	description: string
+	data_type: string
+	field_type: string
+	field_type_key: string
+	decimal_point: string
+	default_value: string
+	placeholder: string
+	required: boolean
+	required_msg: string
+	validation_pattern: string
+	validation_msg: string
+	option_values: string
+	location: string
+	order: number
+	icon: string
+}

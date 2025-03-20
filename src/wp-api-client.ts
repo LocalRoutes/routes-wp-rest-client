@@ -57,7 +57,8 @@ import {
 	IMacGeneralDetails,
 	IGeneral,
 	PostTypesResponse,
-	CountryResponse
+	CountryResponse,
+	GDField
 } from './types'
 import {
 	getDefaultQueryList,
@@ -765,6 +766,46 @@ export class WpApiClient {
 	public gdCountries<P = CountryResponse>(): DefaultEndpoint<P> {
 		const endpoint = 'geodir/v2/countries';
 		return this.defaultEndpoints<P>(endpoint);
+	}
+
+	public gdFields<F = GDField>() {
+		const endpoint = 'geodir/v2/fields';
+		return {
+			find: async (query?: URLSearchParams | number, ...ids: number[]) => {
+				try {
+					if (typeof query === 'number') {
+						ids = [query, ...ids];
+						query = new URLSearchParams();
+					}
+
+					if (!ids.length) {
+						const defaultQuery = new URLSearchParams({
+							status: '1',
+							default: 'all',
+							access: 'all',
+							location: 'none',
+							order: 'asc',
+							orderby: 'order',
+							page: '1',
+							per_page: '100'
+						});
+
+						const finalQuery = new URLSearchParams({
+							...Object.fromEntries(defaultQuery),
+							...Object.fromEntries(query ?? defaultQuery)
+						});
+
+						return this.createEndpointCustomGet<F[], F[]>(`${endpoint}?${finalQuery.toString()}`)();
+					} else {
+						return Promise.all(
+							ids.map(id => this.createEndpointCustomGet<F>(`${endpoint}/${id}`)())
+						);
+					}
+				} catch (error) {
+					throw new Error(`Failed to fetch GD fields: ${error instanceof Error ? error.message : 'Unknown error'}`);
+				}
+			}
+		};
 	}
 
 	public gdPosts<P = GDPost>(postType: string, params: {
