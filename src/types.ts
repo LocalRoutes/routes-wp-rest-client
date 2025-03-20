@@ -360,6 +360,19 @@ export interface GDSearchResult {
   currentPage: number;
 }
 
+export interface GDSettingsGroup {
+  id: string;
+  label: string;
+  description: string;
+  parent_id: string;
+  sub_groups: Array<any>;
+  _links: {
+    options: Array<{
+      href: string;
+    }>;
+  };
+}
+
 export interface IMacGeneral {
   'gd_event'?: IMacGeneralData;
   'gd_offer'?: IMacGeneralData;

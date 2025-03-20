@@ -59,7 +59,8 @@ import {
 	PostTypesResponse,
 	CountryResponse,
 	GDField,
-	GDReview
+	GDReview,
+	GDSettingsGroup
 } from './types'
 import {
 	getDefaultQueryList,
@@ -811,14 +812,25 @@ export class WpApiClient {
 
 	public gdReviews<P = GDReview>(): DefaultEndpoint<P> & { customUpdate: (id: number, body: Partial<P>) => Promise<P>; } {
 		const endpoint = 'geodir/v2/reviews';
-		const defaultParams = new URLSearchParams({ force: 'false' });
-		const defaultEndpoints = this.defaultEndpoints<P>(endpoint, defaultParams);
-
+		const defaultEndpoints = this.defaultEndpoints<P>(endpoint);
 		return {
 			...defaultEndpoints,
 			customUpdate: async (id: number, body: Partial<P>): Promise<P> => {
                 return this.createEndpointCustomPost<P, P>(`${endpoint}/${id}`)(body as P);
 			},
+		};
+	}
+
+	public getGDSettingsGroups<S = GDSettingsGroup>(): {
+		find: () => Promise<S[] | null>;
+		findOne: (id: string) => Promise<S | null>;
+	} {
+		const endpoint = 'geodir/v2/settings';
+		const find = this.createEndpointCustomGet<S[]>(endpoint);
+		const findOne = (id: string) => this.createEndpointCustomGet<S>(`${endpoint}/${id}`)();
+		return {
+			find,
+			findOne,
 		};
 	}
 

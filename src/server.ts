@@ -462,6 +462,29 @@ app.get('/api/gd-countries/:iso2', async (req: Request, res: Response, next: Nex
   }
 });
 
+// GD Settings endpoints
+app.get('/api/gd-settings-groups', async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const settings = await handleApiRequest(() => wpClient.getGDSettingsGroups().find());
+    res.json(settings);
+  } catch (error) {
+    next(error);
+  }
+});
+
+app.get('/api/gd-settings-groups/:id', async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const settingsGroup = await handleApiRequest(() => wpClient.getGDSettingsGroups().findOne(req.params.id));
+    if (!settingsGroup) {
+      res.status(404).json({ error: 'Settings group not found' });
+      return;
+    }
+    res.json(settingsGroup);
+  } catch (error) {
+    next(error);
+  }
+});
+
 // GD Fields endpoints
 app.get('/api/gd-fields', async (req: Request, res: Response, next: NextFunction) => {
   try {
