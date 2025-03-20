@@ -180,6 +180,39 @@ export interface WPThemeSupports {
 	'wp-block-styles': boolean
 }
 
+export interface PostTypesResponse {
+  [key: string]: {
+    description: string;
+    hierarchical: boolean;
+    name: string;
+    slug: string;
+    taxonomies: string[];
+    rest_base: string;
+    _links: {
+      collection: { href: string }[];
+      fields: { href: string }[];
+      "wp:items": { href: string }[];
+      curies: { name: string; href: string; templated: boolean }[];
+    };
+  };
+}
+
+export interface CountryResponse {
+  id: any;
+  name: string;
+  title: string;
+  iso2: any;
+  iso3: any;
+  _links: {
+    self: Array<{
+      href: string;
+    }>;
+    collection: Array<{
+      href: string;
+    }>;
+  };
+}
+
 export interface GDPost extends WPPost {
   postType: string;
   gdCategories?: number[];

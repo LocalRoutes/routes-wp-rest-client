@@ -243,7 +243,7 @@ app.post('/api/posts', async (req: Request, res: Response, next: NextFunction) =
 app.get('/api/gd-categories/:postType', async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { postType } = req.params;
-    const { page, per_page, categoryKey } = req.query;
+    const { page, per_page } = req.query;
 
     const categories = await handleApiRequest(() => wpClient.gdCategories(postType, {
       page: page ? Number(page) : undefined,
@@ -270,6 +270,40 @@ app.get('/api/gd-posts/:postType', async (req: Request, res: Response, next: Nex
       orderby: orderby as string
     }));
     res.json(posts);
+  } catch (error) {
+    next(error);
+  }
+});
+
+// GD Post Types endpoint
+app.get('/api/gd-post-types', async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const postTypes = await handleApiRequest(() => wpClient.gdPostTypes());
+    res.json(postTypes);
+  } catch (error) {
+    next(error);
+  }
+});
+
+// GD Countries endpoints
+app.get('/api/gd-countries', async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const countries = await handleApiRequest(() => wpClient.gdCountries().find());
+    res.json(countries);
+  } catch (error) {
+    next(error);
+  }
+});
+
+app.get('/api/gd-countries/:iso2', async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { iso2 } = req.params;
+    const [country] = await handleApiRequest(() => wpClient.gdCountries().find(Number(iso2)));
+    if (!country) {
+      res.status(404).json({ error: 'Country not found' });
+      return;
+    }
+    res.json(country);
   } catch (error) {
     next(error);
   }
