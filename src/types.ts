@@ -185,12 +185,50 @@ export interface GDPost extends WPPost {
   gdCategories?: number[];
   gdTags?: number[];
   gdCustomFields?: Record<string, any>;
+  latitude?: string;
+  longitude?: string;
+  distance?: string;
+  overall_rating?: number;
+  rating_count?: number;
+  post_locations?: {
+    address?: string;
+    city?: string;
+    region?: string;
+    country?: string;
+    zip?: string;
+  };
+  featured?: boolean;
+  default_category?: string;
+  post_status?: string;
+  post_date?: string;
+  post_modified?: string;
+  post_author?: number;
+  comment_count?: number;
 }
 
-export interface GDCategory extends WPCategory {
-  postType: string;
-  termId: number;
+export interface GDCategory {
+  id: number;
+  name: string;
+  slug: string;
   taxonomy: string;
+  count: number;
+  description: string;
+  parent: number;
+  link: string;
+  image: any[];
+  icon: any[];
+  fa_icon: string;
+  fa_icon_color: string;
+  schema: string;
+  meta: any[];
+  _links: {
+    self?: { href: string }[];
+    collection?: { href: string }[];
+    about?: { href: string }[];
+    up?: { embeddable: boolean; href: string }[];
+    'wp:post_type'?: { href: string }[];
+    curies?: { name: string; href: string; templated: boolean }[];
+  };
 }
 
 export interface GDSearchParams {

@@ -239,7 +239,44 @@ app.post('/api/posts', async (req: Request, res: Response, next: NextFunction) =
 });
 
 
+// GD Categories endpoints
+app.get('/api/gd-categories/:postType', async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { postType } = req.params;
+    const { page, per_page, categoryKey } = req.query;
+
+    const categories = await handleApiRequest(() => wpClient.gdCategories(postType, {
+      page: page ? Number(page) : undefined,
+      per_page: per_page ? Number(per_page) : undefined
+    }));
+    res.json(categories);
+  } catch (error) {
+    next(error);
+  }
+});
+
+// GD Posts endpoints
+app.get('/api/gd-posts/:postType', async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { postType } = req.params;
+    const { category, search, latitude, longitude, page, orderby } = req.query;
+
+    const posts = await handleApiRequest(() => wpClient.gdPosts(postType, {
+      categoryValue: category as string,
+      search: search as string,
+      latitude: latitude as string,
+      longitude: longitude as string,
+      page: page ? Number(page) : undefined,
+      orderby: orderby as string
+    }));
+    res.json(posts);
+  } catch (error) {
+    next(error);
+  }
+});
+
 // Apply error handling middleware
+
 app.use(errorHandler);
 
 // Start server
