@@ -240,20 +240,20 @@ app.post('/api/posts', async (req: Request, res: Response, next: NextFunction) =
 
 
 // GD Categories endpoints
-app.get('/api/gd-categories/:postType', async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const { postType } = req.params;
-    const { page, per_page } = req.query;
+// app.get('/api/gd-categories/:postType', async (req: Request, res: Response, next: NextFunction) => {
+//   try {
+//     const { postType } = req.params;
+//     const { page, per_page } = req.query;
 
-    const categories = await handleApiRequest(() => wpClient.gdCategories(postType, {
-      page: page ? Number(page) : undefined,
-      per_page: per_page ? Number(per_page) : undefined
-    }));
-    res.json(categories);
-  } catch (error) {
-    next(error);
-  }
-});
+//     const categories = await handleApiRequest(() => wpClient.gdCategories(postType, {
+//       page: page ? Number(page) : undefined,
+//       per_page: per_page ? Number(per_page) : undefined
+//     }));
+//     res.json(categories);
+//   } catch (error) {
+//     next(error);
+//   }
+// });
 
 // GD Posts endpoints
 app.get('/api/gd-posts/:postType', async (req: Request, res: Response, next: NextFunction) => {
@@ -317,6 +317,7 @@ app.get('/api/gd-posts/:postType/:id', async (req: Request, res: Response, next:
 app.post('/api/gd-posts/:postType', async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { postType } = req.params;
+    req.body['post_type'] = postType;
     const newPost = await handleApiRequest(() => wpClient.gdPosts(postType).create(req.body));
     res.status(201).json(newPost);
   } catch (error) {

@@ -860,27 +860,27 @@ export class WpApiClient {
 			}
 		}
 
-	public gdCategories<C = GDCategory>(postType: string, params: {
-		per_page?: number,
-		page?: number
-		categoryKey?: string,
-	} = {}): Promise<C[]> {
-		try {
-			if (!postType?.trim()) {
-				throw new Error('Post type is required for GD categories');
-			}
+	// public gdCategories<C = GDCategory>(postType: string, params: {
+	// 	per_page?: number,
+	// 	page?: number
+	// 	categoryKey?: string,
+	// } = {}): Promise<C[]> {
+	// 	try {
+	// 		if (!postType?.trim()) {
+	// 			throw new Error('Post type is required for GD categories');
+	// 		}
 
-			const query = new URLSearchParams({
-				per_page: String(params.per_page || 100),
-				page: String(params.page || 1),
-			});
+	// 		const query = new URLSearchParams({
+	// 			per_page: String(params.per_page || 100),
+	// 			page: String(params.page || 1),
+	// 		});
 
-			const endpoint = `geodir/v2/${postType}/categories?${query.toString()}`;
-			return this.createEndpointCustomGet<C[], C[]>(endpoint)();
-		} catch (error) {
-			throw new Error(`Failed to process GD categories request: ${error instanceof Error ? error.message : 'Unknown error'}`);
-		}
-	}
+	// 		const endpoint = `geodir/v2/${postType}/categories?${query.toString()}`;
+	// 		return this.createEndpointCustomGet<C[], C[]>(endpoint)();
+	// 	} catch (error) {
+	// 		throw new Error(`Failed to process GD categories request: ${error instanceof Error ? error.message : 'Unknown error'}`);
+	// 	}
+	// }
 
 	public gdCountries<P = CountryResponse>(): DefaultEndpoint<P> {
 		const endpoint = 'geodir/v2/countries';
