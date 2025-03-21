@@ -64,7 +64,9 @@ import {
 	GDSetting,
 	GDSystemStatus,
 	GDSystemStatusTool,
-	GDTaxonomy
+	GDTaxonomy,
+	GDSingleMarkerResponse,
+	GDMapMarkersResponse
 } from './types'
 import {
 	getDefaultQueryList,
@@ -744,6 +746,26 @@ export class WpApiClient {
 			return this.createEndpointCustomGet<T, T>(endpoint)();
 		} catch (error) {
 			throw new Error(`Failed to fetch GD post types: ${error instanceof Error ? error.message : 'Unknown error'}`);
+		}
+	}
+
+	public gdMapMarkers<M = GDMapMarkersResponse>(): {
+		find: (query?: URLSearchParams) => Promise<M | null>;
+		findOne: (postId: number) => Promise<GDSingleMarkerResponse | null>;
+	} {
+		try {
+			const endpoint = 'geodir/v2/markers';
+			return {
+				find: async (query?: URLSearchParams) => {
+					const queryString = query ? `?${query.toString()}` : '';
+					return this.createEndpointCustomGet<M>(`${endpoint}${queryString}`)();
+				},
+				findOne: async (postId: number): Promise<GDSingleMarkerResponse | null> => {
+					return this.createEndpointCustomGet<GDSingleMarkerResponse>(`${endpoint}/${postId}`)();
+				}
+			};
+		} catch (error) {
+			throw new Error(`Failed to fetch GD markers: ${error instanceof Error ? error.message : 'Unknown error'}`);
 		}
 	}
 

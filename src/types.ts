@@ -399,6 +399,32 @@ export interface GDSearchResult {
   currentPage: number;
 }
 
+export interface GDMapIcon {
+  i: string;
+  w: number;
+  h: number;
+}
+
+export interface GDMapMarkerItem {
+  m: string;
+  lt: string;
+  ln: string;
+  t: string;
+  i: string;
+}
+
+export interface GDMapMarkersResponse {
+  total: number;
+  baseurl: string;
+  content_url: string;
+  icons: Record<string, GDMapIcon>;
+  items: GDMapMarkerItem[];
+}
+
+export interface GDSingleMarkerResponse {
+  html: string;
+}
+
 export interface GDSettingsGroup {
   id: string;
   label: string;

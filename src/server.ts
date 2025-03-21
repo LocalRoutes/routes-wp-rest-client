@@ -573,6 +573,49 @@ app.get('/api/gd-taxonomies/:slug', async (req: Request, res: Response, next: Ne
   }
 });
 
+// GD Map Markers endpoints
+app.get('/api/gd-map-markers', async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const {
+      post_type,
+      term,
+      tag,
+      post,
+      search
+    } = req.query;
+
+    if (!post_type) {
+      res.status(400).json({ error: 'post_type parameter is required' });
+      return;
+    }
+
+    const query = new URLSearchParams();
+    query.set('post_type', post_type.toString());
+    if (term) query.set('term', term.toString());
+    if (tag) query.set('tag', tag.toString());
+    if (post) query.set('post', post.toString());
+    if (search) query.set('search', search.toString());
+
+    const markers = await handleApiRequest(() => wpClient.gdMapMarkers().find(query));
+    res.json(markers);
+  } catch (error) {
+    next(error);
+  }
+});
+
+app.get('/api/gd-map-markers/:id', async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const marker = await handleApiRequest(() => wpClient.gdMapMarkers().findOne(Number(req.params.id)));
+    if (!marker) {
+      res.status(404).json({ error: 'Marker not found' });
+      return;
+    }
+    res.json(marker);
+  } catch (error) {
+    next(error);
+  }
+});
+
 // GD Fields endpoints
 app.get('/api/gd-fields', async (req: Request, res: Response, next: NextFunction) => {
   try {
