@@ -1292,3 +1292,39 @@ export interface GDSystemStatusTool {
     }>
   }
 }
+
+export interface GDTaxonomyTerm {
+	id: number
+	name: string
+	slug: string
+	taxonomy: string
+	count: number
+	description: string
+	parent: number
+	link: string
+	image: Array<any>
+	icon: Array<any>
+	fa_icon: string
+	fa_icon_color: string
+	schema: string
+	meta: Array<any>
+	_links: {
+	  self: Array<{
+		href: string
+	  }>
+	  collection: Array<{
+		href: string
+	  }>
+	  about: Array<{
+		href: string
+	  }>
+	  "wp:post_type": Array<{
+		href: string
+	  }>
+	  curies: Array<{
+		name: string
+		href: string
+		templated: boolean
+	  }>
+	}
+  }

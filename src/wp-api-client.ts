@@ -66,7 +66,8 @@ import {
 	GDSystemStatusTool,
 	GDTaxonomy,
 	GDSingleMarkerResponse,
-	GDMapMarkersResponse
+	GDMapMarkersResponse,
+	GDTaxonomyTerm
 } from './types'
 import {
 	getDefaultQueryList,
@@ -781,6 +782,83 @@ export class WpApiClient {
 			findOne,
 		};
 	}
+
+		// We are referring here respective post's filter data/category as taxonomy term for example places/categories
+		public gdTaxonomyTerm<T = GDTaxonomyTerm>(): {
+			find: (taxonomy: string, query?: URLSearchParams) => Promise<T[] | null>;
+			findOne: (taxonomy: string, termId: number) => Promise<T | null>;
+			create: (taxonomy: string, body: GDTaxonomyTerm) => Promise<T | GDTaxonomyTerm>;
+			update: (taxonomy: string, termId: number, body: T) => Promise<T | null>;
+		} {
+			try {
+				const find = async (taxonomy: string, query?: URLSearchParams) => {
+					if (!taxonomy?.trim()) {
+						throw new Error('Taxonomy is required for getting terms');
+					}
+	
+					const defaultQuery = new URLSearchParams({
+						order: 'desc',
+						orderby: 'name',
+						hide_empty: 'false',
+						page: '1',
+						per_page: '10'
+					});
+	
+					const finalQuery = new URLSearchParams({
+						...Object.fromEntries(defaultQuery),
+						...Object.fromEntries(query ?? new URLSearchParams())
+					});
+	
+					const endpoint = `geodir/v2/${taxonomy}?${finalQuery.toString()}`;
+					return this.createEndpointCustomGet<T[]>(endpoint)();
+				};
+	
+				const findOne = async (taxonomy: string, termId: number) => {
+					if (!taxonomy?.trim()) {
+						throw new Error('Taxonomy is required for getting term');
+					}
+					if (!termId) {
+						throw new Error('Term ID is required');
+					}
+	
+					const endpoint = `geodir/v2/${taxonomy}/${termId}`;
+					return this.createEndpointCustomGet<T>(endpoint)();
+				};
+	
+				const create = async (taxonomy: string, body: GDTaxonomyTerm) => {
+					if (!taxonomy?.trim()) {
+						throw new Error('Taxonomy is required for creating term');
+					}
+					if (!body.name?.trim()) {
+						throw new Error('Term name is required');
+					}
+	
+					const endpoint = `geodir/v2/${taxonomy}`;
+					return this.createEndpointCustomPost<typeof body, T>(endpoint)(body);
+				};
+	
+				const update = async (taxonomy: string, termId: number, body: Partial<T>) => {
+					if (!taxonomy?.trim()) {
+						throw new Error('Taxonomy is required for updating term');
+					}
+					if (!termId) {
+						throw new Error('Term ID is required');
+					}
+	
+					const endpoint = `geodir/v2/${taxonomy}/${termId}`;
+					return this.createEndpointCustomPost<T, T>(endpoint)(body as T);
+				};
+	
+				return {
+					find,
+					findOne,
+					create,
+					update
+				};
+			} catch (error) {
+				throw new Error(`Failed to process taxonomy term operation: ${error instanceof Error ? error.message : 'Unknown error'}`);
+			}
+		}
 
 	public gdCategories<C = GDCategory>(postType: string, params: {
 		per_page?: number,

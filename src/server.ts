@@ -1,6 +1,6 @@
 import express, { Request, Response, NextFunction } from 'express';
 import { WpApiClient } from './wp-api-client';
-import { WPPost, WPPage, WPComment, WPCategory, AuthPayload, AuthResponse } from './types';
+import { WPPost, WPPage, WPComment, WPCategory, AuthPayload, AuthResponse, GDTaxonomyTerm } from './types';
 import fetch from 'cross-fetch';
 import { getAuthData, setAuthData, updateToken } from './cache';
 
@@ -663,6 +663,111 @@ app.get('/api/gd-fields/:id', async (req: Request, res: Response, next: NextFunc
       return;
     }
     res.json(field);
+  } catch (error) {
+    next(error);
+  }
+});
+
+// GD Taxonomy Term endpoints
+app.get('/api/gd-taxonomy/:postType/:taxonomy', async (req: Request<{ taxonomy: string, postType: string }>, res: Response, next: NextFunction) => {
+  try {
+    const { postType , taxonomy } = req.params;
+    const {
+      include,
+      exclude,
+      offset,
+      order = 'desc',
+      orderby = 'name',
+      hide_empty = 'false',
+      parent,
+      post,
+      slug,
+      page = '1',
+      per_page = '10'
+    } = req.query as Record<string, string>;
+
+    const queryParams = new URLSearchParams();
+    if (include) queryParams.set('include', include);
+    if (exclude) queryParams.set('exclude', exclude);
+    if (offset) queryParams.set('offset', offset);
+    if (order) queryParams.set('order', order);
+    if (orderby) queryParams.set('orderby', orderby);
+    if (hide_empty) queryParams.set('hide_empty', hide_empty);
+    if (parent) queryParams.set('parent', parent);
+    if (post) queryParams.set('post', post);
+    if (slug) queryParams.set('slug', slug);
+    if (page) queryParams.set('page', page);
+    if (per_page) queryParams.set('per_page', per_page);
+
+    const terms = await handleApiRequest(() => wpClient.gdTaxonomyTerm().find(`${postType + '/' +taxonomy}`, queryParams));
+    res.json(terms);
+  } catch (error) {
+    next(error);
+  }
+});
+
+app.get('/api/gd-taxonomy/:postType/:taxonomy/:termId', async (req: Request<{ postType: string , taxonomy: string; termId: string }>, res: Response, next: NextFunction) => {
+  try {
+    const {postType, taxonomy, termId } = req.params;
+    const term = await handleApiRequest(() => wpClient.gdTaxonomyTerm().findOne(`${postType + '/' +taxonomy}`, parseInt(termId)));
+    if (!term) {
+      res.status(404).json({ error: 'Term not found' });
+      return;
+    }
+    res.json(term);
+  } catch (error) {
+    next(error);
+  }
+});
+
+app.post('/api/gd-taxonomy/:postType/:taxonomy', async (req: Request<{ postType: string, taxonomy: string }>, res: Response, next: NextFunction) => {
+  try {
+    const { postType, taxonomy } = req.params;
+    const { name, slug, description, parent } = req.body;
+
+    if (!name?.trim()) {
+      res.status(400).json({ error: 'Term name is required' });
+      return
+    }
+
+    const termData = {
+      name,
+      slug: slug?.trim() || undefined,
+      taxonomy,
+      description: description?.trim() || undefined,
+      parent: parent ? parseInt(parent) : undefined
+    };
+
+    const term = await handleApiRequest(() => wpClient.gdTaxonomyTerm().create(`${postType + '/' +taxonomy}`, termData as GDTaxonomyTerm));
+    res.status(201).json(term);
+  } catch (error) {
+    next(error);
+  }
+});
+
+app.put('/api/gd-taxonomy/:postType/:taxonomy/:termId', async (req: Request<{ postType: string, taxonomy: string; termId: string }>, res: Response, next: NextFunction) => {
+  try {
+    const { postType, taxonomy, termId } = req.params;
+    const { name, slug, description, parent } = req.body;
+
+    if (!name?.trim()) {
+      res.status(400).json({ error: 'Term name is required' });
+      return 
+    }
+
+    const termData = {
+      name,
+      slug: slug?.trim() || undefined,
+      description: description?.trim() || undefined,
+      parent: parent ? parseInt(parent) : undefined
+    };
+
+    const term = await handleApiRequest(() => wpClient.gdTaxonomyTerm().update(`${postType + '/' +taxonomy}`, parseInt(termId), termData as GDTaxonomyTerm));
+    if (!term) {
+      res.status(404).json({ error: 'Term not found' });
+      return;
+    }
+    res.json(term);
   } catch (error) {
     next(error);
   }
