@@ -61,7 +61,10 @@ import {
 	GDField,
 	GDReview,
 	GDSettingsGroup,
-	GDSetting
+	GDSetting,
+	GDSystemStatus,
+	GDSystemStatusTool,
+	GDTaxonomy
 } from './types'
 import {
 	getDefaultQueryList,
@@ -744,6 +747,19 @@ export class WpApiClient {
 		}
 	}
 
+	public gdTaxonomies<T = GDTaxonomy>(): {
+		find: () => Promise<Record<string, T> | null>;
+		findOne: (slug: string) => Promise<T | null>;
+	} {
+		const endpoint = 'geodir/v2/taxonomies';
+		const find = this.createEndpointCustomGet<Record<string, T>>(endpoint);
+		const findOne = (slug: string) => this.createEndpointCustomGet<T>(`${endpoint}/${slug}`)();
+		return {
+			find,
+			findOne,
+		};
+	}
+
 	public gdCategories<C = GDCategory>(postType: string, params: {
 		per_page?: number,
 		page?: number
@@ -850,6 +866,36 @@ export class WpApiClient {
 			};
 		} catch (error) {
 			throw new Error(`Failed to handle GD setting: ${error instanceof Error ? error.message : 'Unknown error'}`);
+		}
+	}
+
+
+	public GDSystemStatusTool<T = GDSystemStatusTool>(): {
+		find: () => Promise<T[] | null>;
+		findOne: (id: string) => Promise<T | null>;
+		customUpdate: (id: string, body: Partial<T>) => Promise<T>;
+	} {
+		try {
+			const endpoint = 'geodir/v2/system_status/tools';
+			const find = this.createEndpointCustomGet<T[]>(endpoint);
+			const findOne = (id: string) => this.createEndpointCustomGet<T>(`${endpoint}/${id}`)();
+			return {
+				find,
+				findOne,
+				customUpdate: async (id: string, body: Partial<T>): Promise<T> => {
+					return this.createEndpointCustomPost<T, T>(`${endpoint}/${id}`)(body as T);
+				},
+			};
+		} catch (error) {
+			throw new Error(`Failed to handle GD system status: ${error instanceof Error ? error.message : 'Unknown error'}`);
+		}
+	}
+
+	public GDSystemStatus(): () => Promise<GDSystemStatus | null> {
+		try {
+			return this.createEndpointCustomGet<GDSystemStatus>('geodir/v2/system_status');
+		} catch (error) {
+			throw new Error(`Failed to get GD system status: ${error instanceof Error ? error.message : 'Unknown error'}`);
 		}
 	}
 

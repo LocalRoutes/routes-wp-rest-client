@@ -361,6 +361,28 @@ export interface GDCategory {
   };
 }
 
+export interface GDTaxonomy {
+  name: string;
+  slug: string;
+  description: string;
+  types: Array<string>;
+  hierarchical: boolean;
+  rest_base: string;
+  _links: {
+    collection: Array<{
+      href: string;
+    }>;
+    "wp:items": Array<{
+      href: string;
+    }>;
+    curies: Array<{
+      name: string;
+      href: string;
+      templated: boolean;
+    }>;
+  };
+}
+
 export interface GDSearchParams {
   postType: string;
   categoryValue?: string | number;
@@ -686,4 +708,561 @@ export interface GDField {
 	location: string
 	order: number
 	icon: string
+}
+
+export interface GDSystemStatus {
+	environment: {
+	  home_url: string
+	  site_url: string
+	  version: string
+	  wp_version: string
+	  wp_multisite: boolean
+	  wp_memory_limit: number
+	  wp_debug_mode: boolean
+	  wp_cron: boolean
+	  language: string
+	  server_info: string
+	  php_version: string
+	  php_post_max_size: number
+	  php_max_execution_time: number
+	  php_max_input_vars: number
+	  curl_version: string
+	  suhosin_installed: boolean
+	  max_upload_size: number
+	  mysql_version: string
+	  default_timezone: string
+	  fsockopen_or_curl_enabled: boolean
+	  soapclient_enabled: boolean
+	  domdocument_enabled: boolean
+	  gzip_enabled: boolean
+	  mbstring_enabled: boolean
+	  remote_post_successful: boolean
+	  remote_post_response: string
+	  remote_get_successful: boolean
+	  remote_get_response: string
+	  platform: string
+	  browser_name: string
+	  browser_version: string
+	  user_agent: string
+	}
+	database: {
+	  geodirectory_db_version: string
+	  database_prefix: string
+	  database_tables: {
+		geodirectory: {
+		  wp_geodir_api_keys: {
+			data: string
+			index: string
+		  }
+		  wp_geodir_attachments: {
+			data: string
+			index: string
+		  }
+		  wp_geodir_business_hours: {
+			data: string
+			index: string
+		  }
+		  wp_geodir_custom_fields: {
+			data: string
+			index: string
+		  }
+		  wp_geodir_custom_sort_fields: {
+			data: string
+			index: string
+		  }
+		  wp_geodir_post_review: {
+			data: string
+			index: string
+		  }
+		  wp_geodir_gd_place_detail: {
+			data: string
+			index: string
+		  }
+		  wp_countries: {
+			data: string
+			index: string
+		  }
+		}
+		other: {
+		  pmd_categories: {
+			data: string
+			index: string
+		  }
+		  pmd_invoices: {
+			data: string
+			index: string
+		  }
+		  pmd_listings: {
+			data: string
+			index: string
+		  }
+		  pmd_listings_categories: {
+			data: string
+			index: string
+		  }
+		  pmd_users: {
+			data: string
+			index: string
+		  }
+		  wp_alm: {
+			data: string
+			index: string
+		  }
+		  wp_bp_activity: {
+			data: string
+			index: string
+		  }
+		  wp_bp_activity_meta: {
+			data: string
+			index: string
+		  }
+		  wp_bp_friends: {
+			data: string
+			index: string
+		  }
+		  wp_bp_groups: {
+			data: string
+			index: string
+		  }
+		  wp_bp_groups_groupmeta: {
+			data: string
+			index: string
+		  }
+		  wp_bp_groups_members: {
+			data: string
+			index: string
+		  }
+		  wp_bp_messages_messages: {
+			data: string
+			index: string
+		  }
+		  wp_bp_messages_meta: {
+			data: string
+			index: string
+		  }
+		  wp_bp_messages_notices: {
+			data: string
+			index: string
+		  }
+		  wp_bp_messages_recipients: {
+			data: string
+			index: string
+		  }
+		  wp_bp_notifications: {
+			data: string
+			index: string
+		  }
+		  wp_bp_notifications_meta: {
+			data: string
+			index: string
+		  }
+		  wp_bp_user_blogs: {
+			data: string
+			index: string
+		  }
+		  wp_bp_user_blogs_blogmeta: {
+			data: string
+			index: string
+		  }
+		  wp_bp_xprofile_data: {
+			data: string
+			index: string
+		  }
+		  wp_bp_xprofile_fields: {
+			data: string
+			index: string
+		  }
+		  wp_bp_xprofile_groups: {
+			data: string
+			index: string
+		  }
+		  wp_bp_xprofile_meta: {
+			data: string
+			index: string
+		  }
+		  wp_commentmeta: {
+			data: string
+			index: string
+		  }
+		  wp_comments: {
+			data: string
+			index: string
+		  }
+		  wp_crm_campaign: {
+			data: string
+			index: string
+		  }
+		  wp_crm_company: {
+			data: string
+			index: string
+		  }
+		  wp_crm_customer: {
+			data: string
+			index: string
+		  }
+		  wp_crm_project: {
+			data: string
+			index: string
+		  }
+		  wp_crm_roadmap: {
+			data: string
+			index: string
+		  }
+		  wp_email_log: {
+			data: string
+			index: string
+		  }
+		  wp_failed_jobs: {
+			data: string
+			index: string
+		  }
+		  wp_gdt_users: {
+			data: string
+			index: string
+		  }
+		  wp_geodir_claim: {
+			data: string
+			index: string
+		  }
+		  wp_geodir_countries: {
+			data: string
+			index: string
+		  }
+		  wp_geodir_post_icon: {
+			data: string
+			index: string
+		  }
+		  wp_geodir_tabs_layout: {
+			data: string
+			index: string
+		  }
+		  wp_links: {
+			data: string
+			index: string
+		  }
+		  wp_loginizer_logs: {
+			data: string
+			index: string
+		  }
+		  wp_mailchimp_carts: {
+			data: string
+			index: string
+		  }
+		  wp_nf3_actions: {
+			data: string
+			index: string
+		  }
+		  wp_nf3_action_meta: {
+			data: string
+			index: string
+		  }
+		  wp_nf3_chunks: {
+			data: string
+			index: string
+		  }
+		  wp_nf3_fields: {
+			data: string
+			index: string
+		  }
+		  wp_nf3_field_meta: {
+			data: string
+			index: string
+		  }
+		  wp_nf3_forms: {
+			data: string
+			index: string
+		  }
+		  wp_nf3_form_meta: {
+			data: string
+			index: string
+		  }
+		  wp_nf3_objects: {
+			data: string
+			index: string
+		  }
+		  wp_nf3_object_meta: {
+			data: string
+			index: string
+		  }
+		  wp_nf3_relationships: {
+			data: string
+			index: string
+		  }
+		  wp_nf3_upgrades: {
+			data: string
+			index: string
+		  }
+		  wp_options: {
+			data: string
+			index: string
+		  }
+		  wp_pattern_lock: {
+			data: string
+			index: string
+		  }
+		  wp_pmxe_exports: {
+			data: string
+			index: string
+		  }
+		  wp_pmxe_google_cats: {
+			data: string
+			index: string
+		  }
+		  wp_pmxe_posts: {
+			data: string
+			index: string
+		  }
+		  wp_pmxe_templates: {
+			data: string
+			index: string
+		  }
+		  wp_pmxi_files: {
+			data: string
+			index: string
+		  }
+		  wp_pmxi_history: {
+			data: string
+			index: string
+		  }
+		  wp_pmxi_images: {
+			data: string
+			index: string
+		  }
+		  wp_pmxi_imports: {
+			data: string
+			index: string
+		  }
+		  wp_pmxi_posts: {
+			data: string
+			index: string
+		  }
+		  wp_pmxi_templates: {
+			data: string
+			index: string
+		  }
+		  wp_postmeta: {
+			data: string
+			index: string
+		  }
+		  wp_posts: {
+			data: string
+			index: string
+		  }
+		  wp_queue: {
+			data: string
+			index: string
+		  }
+		  wp_revslider_css: {
+			data: string
+			index: string
+		  }
+		  wp_revslider_layer_animations: {
+			data: string
+			index: string
+		  }
+		  wp_revslider_navigations: {
+			data: string
+			index: string
+		  }
+		  wp_revslider_sliders: {
+			data: string
+			index: string
+		  }
+		  wp_revslider_slides: {
+			data: string
+			index: string
+		  }
+		  wp_revslider_static_slides: {
+			data: string
+			index: string
+		  }
+		  wp_signups: {
+			data: string
+			index: string
+		  }
+		  wp_slp_extendo_meta: {
+			data: string
+			index: string
+		  }
+		  wp_sm_sessions: {
+			data: string
+			index: string
+		  }
+		  wp_store_locator: {
+			data: string
+			index: string
+		  }
+		  wp_strong_views: {
+			data: string
+			index: string
+		  }
+		  wp_termmeta: {
+			data: string
+			index: string
+		  }
+		  wp_terms: {
+			data: string
+			index: string
+		  }
+		  wp_term_relationships: {
+			data: string
+			index: string
+		  }
+		  wp_term_taxonomy: {
+			data: string
+			index: string
+		  }
+		  wp_usermeta: {
+			data: string
+			index: string
+		  }
+		  wp_users: {
+			data: string
+			index: string
+		  }
+		  wp_uwp_form_extras: {
+			data: string
+			index: string
+		  }
+		  wp_uwp_form_fields: {
+			data: string
+			index: string
+		  }
+		  wp_uwp_usermeta: {
+			data: string
+			index: string
+		  }
+		  wp_wc_download_log: {
+			data: string
+			index: string
+		  }
+		  wp_wc_webhooks: {
+			data: string
+			index: string
+		  }
+		  wp_woocommerce_api_keys: {
+			data: string
+			index: string
+		  }
+		  wp_woocommerce_attribute_taxonomies: {
+			data: string
+			index: string
+		  }
+		  wp_woocommerce_downloadable_product_permissions: {
+			data: string
+			index: string
+		  }
+		  wp_woocommerce_log: {
+			data: string
+			index: string
+		  }
+		  wp_woocommerce_order_itemmeta: {
+			data: string
+			index: string
+		  }
+		  wp_woocommerce_order_items: {
+			data: string
+			index: string
+		  }
+		  wp_woocommerce_payment_tokenmeta: {
+			data: string
+			index: string
+		  }
+		  wp_woocommerce_payment_tokens: {
+			data: string
+			index: string
+		  }
+		  wp_woocommerce_sessions: {
+			data: string
+			index: string
+		  }
+		  wp_woocommerce_shipping_zones: {
+			data: string
+			index: string
+		  }
+		  wp_woocommerce_shipping_zone_locations: {
+			data: string
+			index: string
+		  }
+		  wp_woocommerce_shipping_zone_methods: {
+			data: string
+			index: string
+		  }
+		  wp_woocommerce_tax_rates: {
+			data: string
+			index: string
+		  }
+		  wp_woocommerce_tax_rate_locations: {
+			data: string
+			index: string
+		  }
+		  wp_wpinv_subscriptions: {
+			data: string
+			index: string
+		  }
+		}
+	  }
+	  database_size: {
+		data: number
+		index: number
+	  }
+	}
+	active_plugins: Array<{
+	  plugin: string
+	  name: string
+	  version: string
+	  url: string
+	  author_name: string
+	  author_url: string
+	  network_activated: boolean
+	  latest_verison: string
+	}>
+	theme: {
+	  name: string
+	  version: string
+	  latest_verison: string
+	  author_url: string
+	  is_child_theme: boolean
+	  has_geodirectory_support: boolean
+	  has_outdated_templates: boolean
+	  overrides: Array<any>
+	  parent_name: string
+	  parent_version: string
+	  parent_latest_verison: string
+	  parent_author_url: string
+	}
+	settings: {
+	  api_enabled: boolean
+	  upload_max_filesize: string
+	  default_status: string
+	  maps_api_key: boolean
+	  default_location: boolean
+	}
+	security: {
+	  secure_connection: boolean
+	  hide_errors: boolean
+	}
+	pages: Array<{
+	  page_name: string
+	  page_id: number
+	  page_set: boolean
+	  page_exists: boolean
+	  page_visible: boolean
+	  shortcode: string
+	  shortcode_required: boolean
+	  shortcode_present: boolean
+	}>
+  }
+
+export interface GDSystemStatusTool {
+  id: string
+  name: string
+  action: string
+  description: string
+  _links: {
+    item: Array<{
+      embeddable: boolean
+      href: string
+    }>
+  }
 }

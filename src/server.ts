@@ -505,6 +505,74 @@ app.put('/api/gd-settings/:group/:id', async (req: Request, res: Response, next:
   }
 });
 
+// GD System Status endpoint
+app.get('/api/gd-system-status', async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const systemStatus = await handleApiRequest(() => wpClient.GDSystemStatus()());
+    res.json(systemStatus);
+  } catch (error) {
+    next(error);
+  }
+});
+
+// GD System Status Tools endpoints
+app.get('/api/gd-system-status/tools', async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const tools = await handleApiRequest(() => wpClient.GDSystemStatusTool().find());
+    res.json(tools);
+  } catch (error) {
+    next(error);
+  }
+});
+
+app.get('/api/gd-system-status/tools/:id', async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { id } = req.params;
+    const tool = await handleApiRequest(() => wpClient.GDSystemStatusTool().findOne(id));
+    if (!tool) {
+      res.status(404).json({ error: 'System status tool not found' });
+      return;
+    }
+    res.json(tool);
+  } catch (error) {
+    next(error);
+  }
+});
+
+app.put('/api/gd-system-status/tools/:id', async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { id } = req.params;
+    const updatedTool = await handleApiRequest(() => wpClient.GDSystemStatusTool().customUpdate(id, req.body));
+    res.json(updatedTool);
+  } catch (error) {
+    next(error);
+  }
+});
+
+// GD Taxonomy endpoints
+app.get('/api/gd-taxonomies', async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const taxonomies = await handleApiRequest(() => wpClient.gdTaxonomies().find());
+    res.json(taxonomies);
+  } catch (error) {
+    next(error);
+  }
+});
+
+app.get('/api/gd-taxonomies/:slug', async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { slug } = req.params;
+    const taxonomy = await handleApiRequest(() => wpClient.gdTaxonomies().findOne(slug));
+    if (!taxonomy) {
+      res.status(404).json({ error: 'Taxonomy not found' });
+      return;
+    }
+    res.json(taxonomy);
+  } catch (error) {
+    next(error);
+  }
+});
+
 // GD Fields endpoints
 app.get('/api/gd-fields', async (req: Request, res: Response, next: NextFunction) => {
   try {
