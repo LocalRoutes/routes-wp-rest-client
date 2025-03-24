@@ -454,7 +454,17 @@ app.put('/api/gd-reviews/:id', async (req: Request, res: Response, next: NextFun
 // GD Post Types endpoint
 app.get('/api/gd-post-types', async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const postTypes = await handleApiRequest(() => wpClient.gdPostTypes());
+    const postTypes = await handleApiRequest(() => wpClient.gdPostTypes().find());
+    res.json(postTypes);
+  } catch (error) {
+    next(error);
+  }
+});
+
+app.get('/api/gd-post-types/:postTypeSlug', async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { postTypeSlug } = req.params;
+    const postTypes = await handleApiRequest(() => wpClient.gdPostTypes().findOne(postTypeSlug));
     res.json(postTypes);
   } catch (error) {
     next(error);

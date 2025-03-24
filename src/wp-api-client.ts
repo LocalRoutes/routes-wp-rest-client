@@ -741,13 +741,17 @@ export class WpApiClient {
 
 	// GD ENDPOINTS
 
-	public gdPostTypes<T = PostTypesResponse>(): Promise<T> {
-		try {
-			const endpoint = 'geodir/v2/types';
-			return this.createEndpointCustomGet<T, T>(endpoint)();
-		} catch (error) {
-			throw new Error(`Failed to fetch GD post types: ${error instanceof Error ? error.message : 'Unknown error'}`);
-		}
+	public gdPostTypes<T = PostTypesResponse>(): {
+		find: () => Promise<Record<string, T> | null>;
+		findOne: (slug: string) => Promise<T | null>;
+	} {
+		const endpoint = 'geodir/v2/types';
+		const find = this.createEndpointCustomGet<Record<string, T>>(endpoint);
+		const findOne = (slug: string) => this.createEndpointCustomGet<T>(`${endpoint}/${slug}`)();
+		return {
+			find,
+			findOne,
+		};
 	}
 
 	public gdMapMarkers<M = GDMapMarkersResponse>(): {
