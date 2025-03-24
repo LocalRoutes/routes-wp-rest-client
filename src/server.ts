@@ -238,6 +238,28 @@ app.post('/api/posts', async (req: Request, res: Response, next: NextFunction) =
   }
 });
 
+app.put('/api/posts/:id', async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const updatedPost = await handleApiRequest(() => wpClient.post<WPPost>().update(req.body, Number(req.params.id)));
+    res.json(updatedPost);
+  } catch (error) {
+    next(error);
+  }
+});
+
+app.delete('/api/posts/:id', async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const [deletedPost] = await handleApiRequest(() => wpClient.post<WPPost>().delete(Number(req.params.id)));
+    if (!deletedPost) {
+      res.status(404).json({ error: 'Post not found' });
+      return;
+    }
+    res.json({ message: 'Post deleted successfully', post: deletedPost });
+  } catch (error) {
+    next(error);
+  }
+});
+
 
 // GD Categories endpoints
 // app.get('/api/gd-categories/:postType', async (req: Request, res: Response, next: NextFunction) => {
