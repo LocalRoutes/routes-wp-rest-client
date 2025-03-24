@@ -181,7 +181,10 @@ export interface WPThemeSupports {
 }
 
 export interface PostTypesResponse {
-  [key: string]: {
+  [key: string]: GDPostType;
+}
+
+export interface GDPostType {
     description: string;
     hierarchical: boolean;
     name: string;
@@ -194,7 +197,6 @@ export interface PostTypesResponse {
       "wp:items": { href: string }[];
       curies: { name: string; href: string; templated: boolean }[];
     };
-  };
 }
 
 export interface GDSetting {

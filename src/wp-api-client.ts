@@ -67,7 +67,8 @@ import {
 	GDTaxonomy,
 	GDSingleMarkerResponse,
 	GDMapMarkersResponse,
-	GDTaxonomyTerm
+	GDTaxonomyTerm,
+	GDPostType
 } from './types'
 import {
 	getDefaultQueryList,
@@ -741,7 +742,7 @@ export class WpApiClient {
 
 	// GD ENDPOINTS
 
-	public gdPostTypes<T = PostTypesResponse>(): {
+	public gdPostTypes<T = PostTypesResponse | GDPostType>(): {
 		find: () => Promise<Record<string, T> | null>;
 		findOne: (slug: string) => Promise<T | null>;
 	} {
